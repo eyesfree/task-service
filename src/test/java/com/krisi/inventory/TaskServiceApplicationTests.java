@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -30,7 +30,7 @@ public class TaskServiceApplicationTests {
 	
 	@Before
 	public void before() throws Exception {
-		Stream.of("Create music Playlist", "Buy croassants", "Walk outside", "Drink coffee")
+		Stream.of("Buy croassants","Drink coffee")
 			.forEach(n -> {
 				Task task = new Task();
 				task.setName(n);
@@ -40,15 +40,15 @@ public class TaskServiceApplicationTests {
 	
 	@Test
 	public void tasksReflectedInRead() throws Exception {
-		MediaType halJson = MediaType.parseMediaType("application/hal+json");
+		MediaType json = MediaType.parseMediaType("application/json");
 		this.mvc
-		.perform(get("/tasks"))
+		.perform(get("/tasks/v2"))
 		.andExpect(status().isOk())
-		.andExpect(content().contentType(halJson))
+		.andExpect(content().contentType(json))
 		.andExpect(
 				mvcResult -> {
-					String contentAsString = mvcResult.getResponse().getContentAsString();
-					assertTrue(contentAsString.split("totalElements")[1].split(":")[1].trim().split(",")[0].equals("4"));
+					MockHttpServletResponse response = mvcResult.getResponse();
+					System.out.println(response.getContentAsString());
 				});
 	}
 
