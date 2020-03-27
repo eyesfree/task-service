@@ -5,10 +5,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 @RestController
@@ -17,20 +20,44 @@ public class TaskController {
 
     private static final Logger log = Logger.getLogger(TaskController.class.getName());
 
-    private TaskRepository repository;
+    private final TaskRepository repository;
 
-    TaskController(TaskRepository repository) {
+    TaskController(final TaskRepository repository) {
         this.repository = repository;
-      }
-    
+    }
+
     @GetMapping
     public List<Task> getAll() {
         return repository.findAll();
     }
 
-    @PostMapping
-    public Task save(@RequestBody Task task) {
-        log.info("Saving task " + task);
+    @PostMapping()
+    public Task save(@RequestBody final Task task) {
+        log.info("Saving task with id" + task.getId());
         return repository.save(task);
+    }
+
+
+    @PutMapping("/{id}")
+    public Task update(@PathVariable String id, @RequestBody final Task task) {
+        log.info("Updating task with id" + task.getId());
+        if(!task.getId().equals(id)) {
+            log.warning("Id from request and task.id do not match " + id);
+            return null;
+        }
+
+        return repository.save(task);
+    }
+
+    @DeleteMapping
+    public void deleteAll() {
+        log.info("Deleting all");
+        repository.deleteAll();
+    }
+
+    @DeleteMapping("/delete")
+    public void delete(Task task) {
+        log.info("Deleting " + task.getId() + " with name " + task.getName());
+        repository.delete(task);
     }
 }
