@@ -31,6 +31,13 @@ public class TaskController {
         return repository.findAll();
     }
 
+    @GetMapping("/{name}")
+    public List<Task> findByName(@PathVariable("name") String name) {
+        List<Task> tasksWithName = repository.findByName(name);
+        log.info("There are " + tasksWithName.size() + " tasks with name " + name);
+        return tasksWithName;
+    }
+
     @PostMapping()
     public Task save(@RequestBody final Task task) {
         log.info("Saving task with id" + task.getId());
@@ -39,7 +46,7 @@ public class TaskController {
 
 
     @PutMapping("/{id}")
-    public Task update(@PathVariable String id, @RequestBody final Task task) {
+    public Task update(@PathVariable("id") String id, @RequestBody final Task task) {
         log.info("Updating task with id" + task.getId());
         if(!task.getId().equals(id)) {
             log.warning("Id from request and task.id do not match " + id);
@@ -55,9 +62,9 @@ public class TaskController {
         repository.deleteAll();
     }
 
-    @DeleteMapping("/delete")
-    public void delete(Task task) {
-        log.info("Deleting " + task.getId() + " with name " + task.getName());
-        repository.delete(task);
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable("id") String id) {
+        log.info("Deleting " + id);
+        repository.deleteById(id);
     }
 }
