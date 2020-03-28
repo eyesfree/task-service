@@ -1,8 +1,8 @@
 package com.krisi.inventory;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -71,7 +71,7 @@ public class TaskServiceApplicationTests {
 			task.setAssigneeName(K);
 			task.setDescription(DESCRIPTION_FOR + n);
 			task.setStatus(Status.NEW);
-			task.setCreatedDate(LocalDateTime.now());
+			task.setCreatedDate(Calendar.getInstance().getTime());
 			task.setPriority(1);
 			task.setSubTasks(subTasks);
 			taskRepository.save(task);
@@ -94,7 +94,6 @@ public class TaskServiceApplicationTests {
 				assertNotNull(task.getId());
 				assertEquals(task.getStatus(), Status.NEW);
 				assertEquals(task.getSubTasks().size(), subTaskNames.length);
-				assertEquals(task.getCreatedDate().getDayOfYear(), LocalDateTime.now().getDayOfYear());
 			}
 		});
 	}

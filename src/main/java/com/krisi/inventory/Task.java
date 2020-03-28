@@ -1,6 +1,6 @@
 package com.krisi.inventory;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import org.springframework.data.annotation.Id;
 
@@ -14,8 +14,8 @@ public class Task {
 	private Status status;
 	private String assigneeName;
 	private int priority;
-	private LocalDateTime dueDate;
-	private LocalDateTime createdDate;
+	private Date dueDate;
+	private Date createdDate;
 	private List<String> subTasks;
 
 	@Override
@@ -39,19 +39,19 @@ public class Task {
 		this.subTasks = subTasks;
 	}
 
-	public LocalDateTime getCreatedDate() {
+	public Date getCreatedDate() {
 		return createdDate;
 	}
 
-	public void setCreatedDate(final LocalDateTime createdDate) {
+	public void setCreatedDate(final Date createdDate) {
 		this.createdDate = createdDate;
 	}
 
-	public LocalDateTime getDueDate() {
+	public Date getDueDate() {
 		return dueDate;
 	}
 
-	public void setDueDate(final LocalDateTime dueDate) {
+	public void setDueDate(final Date dueDate) {
 		this.dueDate = dueDate;
 	}
 
