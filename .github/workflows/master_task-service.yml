@@ -20,8 +20,8 @@ jobs:
       with:
         java-version: '8'
 
-    - name: Build with Maven
-      run: mvn clean install
+    - name: Build with Gradle
+      run: gradle assemble
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v1
@@ -29,4 +29,4 @@ jobs:
         app-name: 'task-service'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_0a9e0c9891ab47069a3fd38da6f78e4a }}
-        package: '${{ github.workspace }}/target/*.jar'
+        package: '${{ github.workspace }}/build/libs/*.jar'
