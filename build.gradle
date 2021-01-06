@@ -11,12 +11,12 @@ sourceCompatibility = '1.8'
 repositories {
 	mavenCentral()
 }
-
+/**
 def profiles = 'dev'
 
 bootRun {
   args = ["--spring.profiles.active=" + profiles]
-}
+}**/
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
