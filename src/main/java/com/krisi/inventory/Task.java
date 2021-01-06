@@ -4,6 +4,9 @@ import java.util.Date;
 import java.util.List;
 import org.springframework.data.annotation.Id;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class Task {
 	@Id
 	private String id;
@@ -101,5 +104,10 @@ public class Task {
 
 	public void setAssigneeName(final String assignee) {
 		this.assigneeName = assignee;
+	}
+	
+	public String toJson() throws JsonProcessingException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		return objectMapper.writeValueAsString(this);
 	}
 }

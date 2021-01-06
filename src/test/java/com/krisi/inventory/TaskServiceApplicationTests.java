@@ -16,9 +16,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,6 +29,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -39,11 +42,11 @@ public class TaskServiceApplicationTests {
 	private static final String K = "K";
 
 	private static final String DESCRIPTION_FOR = "description for ";
-
+	
 	@Autowired
 	private MockMvc mvc;
 
-	@Autowired
+	@MockBean
 	private TaskRepository taskRepository;
 
 	private final String[] testNames = { "Buy croassants", "Drink coffee" };
@@ -55,27 +58,35 @@ public class TaskServiceApplicationTests {
 
 	@Before
 	public void before() throws Exception {
+		
 		List<String> subTasks = new ArrayList<String>();
 		Stream.of(subTaskNames).forEach(subTaskName -> {
 			final Task subTask = new Task();
 			subTask.setName(subTaskName);
 			subTask.setStatus(Status.NEW);
 			subTask.setSubTask(true);
+			Mockito.when(taskRepository.save(subTask)).thenReturn(subTask);
 			Task createdSubTask = taskRepository.save(subTask);
 			subTasks.add(createdSubTask.getId());
 		});
 
 		Stream.of(testNames).forEach(n -> {
-			final Task task = new Task();
-			task.setName(n);
-			task.setAssigneeName(K);
-			task.setDescription(DESCRIPTION_FOR + n);
-			task.setStatus(Status.NEW);
-			task.setCreatedDate(Calendar.getInstance().getTime());
-			task.setPriority(1);
-			task.setSubTasks(subTasks);
+			final Task task = generateTask(subTasks, n);
+			Mockito.when(taskRepository.save(task)).thenReturn(task);
 			taskRepository.save(task);
 		});
+	}
+
+	private Task generateTask(List<String> subTasks, String taskName) {
+		final Task task = new Task();
+		task.setName(taskName);
+		task.setAssigneeName(K);
+		task.setDescription(DESCRIPTION_FOR + taskName);
+		task.setStatus(Status.NEW);
+		task.setCreatedDate(Calendar.getInstance().getTime());
+		task.setPriority(1);
+		task.setSubTasks(subTasks);
+		return task;
 	}
 
 	@Test
@@ -102,6 +113,16 @@ public class TaskServiceApplicationTests {
 	public void deleteTest() throws Exception {
 		this.mvc
 		.perform(delete("/tasks/v2"))
+		.andExpect(status()
+		.isOk()).andReturn();
+	}
+	
+	@Test
+	public void postTest() throws Exception {
+		this.mvc
+		.perform(post("/tasks/v2")
+		.contentType(MediaType.APPLICATION_JSON)
+		.content(generateTask(null, "TestTask").toJson()))
 		.andExpect(status()
 		.isOk()).andReturn();
 	}
