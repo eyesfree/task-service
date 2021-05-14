@@ -12,6 +12,7 @@ public class Task {
 	private String id;
 
 	private boolean isSubTask;
+	private String projectId;
 	private String name;
 	private String description;
 	private Status status;
@@ -32,6 +33,14 @@ public class Task {
 
 	public void setSubTask(boolean isSubTask) {
 		this.isSubTask = isSubTask;
+	}
+
+	public String getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(String projectId) {
+		this.projectId = projectId;
 	}
 
 	public List<String> getSubTasks() {

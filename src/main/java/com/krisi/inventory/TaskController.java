@@ -30,6 +30,16 @@ public class TaskController {
     public List<Task> getAll() {
         return repository.findAll();
     }
+    
+    @PutMapping("/assignAll/{projectId}")
+    public void assignAllToProject(@PathVariable("projectId") String projectId) {
+        List<Task> allTasks = repository.findAll();
+        for (Task task : allTasks) {
+        	log.info("Assigning task " + task.getName() + " to project " + projectId);
+			task.setProjectId(projectId);
+			repository.save(task);
+		}
+    }
 
     @GetMapping("/{name}")
     public List<Task> findByName(@PathVariable("name") String name) {
