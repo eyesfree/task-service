@@ -26,4 +26,8 @@ public class TasksProject {
 		return id;
 	}
 
+	public void setId(String id) {
+		this.id = id;
+	}
+
 }

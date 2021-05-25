@@ -12,4 +12,5 @@ public interface TaskRepository extends MongoRepository<Task, String> {
 	List<Task> findByName(@Param("name") String name);
 	Optional<Task> findById(@Param("id") Long id);
 	List<Task> findByStatus(@Param("status") Status status);
+	List<Task> findByProjectId(@Param("projectId") String projectId);
 }

@@ -40,7 +40,7 @@ public class TasksProjectController {
         	return null;
         }       
     }
-    
+   
     @PostMapping()
     public TasksProject save(@RequestBody final TasksProject project) {
         log.info("Saving project with id: " + project.getId());
