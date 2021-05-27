@@ -47,6 +47,13 @@ public class TaskController {
         log.info("There are " + tasksWithName.size() + " tasks with name " + name);
         return tasksWithName;
     }
+    
+    @GetMapping("/findByProject/{projectId}")
+    public List<Task> findByProjectId(@PathVariable("projectId") String projectId) {
+        List<Task> tasksWithProject = repository.findByProjectId(projectId);
+        log.info("There are " + tasksWithProject.size() + " tasks with project " + projectId);
+        return tasksWithProject;
+    }
 
     @PostMapping()
     public Task save(@RequestBody final Task task) {
