@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -37,6 +38,18 @@ public class TasksProjectController {
             return project;
         } else {
         	log.info("Project not found for id: " + id);
+        	return null;
+        }       
+    }
+    
+    @GetMapping("/findByName")
+    public TasksProject findByName(@RequestParam("name") String name) {
+        TasksProject projectWithId = repository.findByName(name);
+        if(projectWithId != null) {
+        	log.info("Project found: " + projectWithId.getName());
+            return projectWithId;
+        } else {
+        	log.info("Project not found for name: " + name);
         	return null;
         }       
     }
